@@ -1,0 +1,56 @@
+import React from "react";
+import { Link } from "react-router-dom";
+//import './UsersItem.css'
+
+const UserItem = (props) => {
+  return (
+    <li>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          width: "400px",
+          borderRadius: "5px",
+          margin: "5px",
+          backgroundColor: "#e4dcf5",
+        }}
+      >
+        <Link to={`/${props.id}/places`}>
+          <div
+            style={{
+              width: "100px",
+              height: "100px",
+              borderRadius: "50%",
+              margin: "5px",
+              backgroundColor: "#ffba9ae0",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={props.image}
+              alt={props.name}
+              style={{
+                height: 80,
+                width: 80,
+                border: "2px",
+                borderRadius: "5px",
+              }}
+            ></img>
+          </div>
+          </Link>
+          <Link to={`/${props.id}/places`}>
+          <div>
+            <h2>{props.name}</h2>
+            <h3>
+              {props.placeCount} {props.placeCount === 1 ? "Place" : "Places"}
+            </h3>
+          </div>
+          </Link>
+      </div>
+    </li>
+  );
+};
+
+export default UserItem;

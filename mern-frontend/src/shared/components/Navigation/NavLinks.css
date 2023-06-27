@@ -1,0 +1,24 @@
+.svg_icons {
+  transform: scale(1.8);
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-links li {
+  margin: 4rem;
+}
+
+@media (max-width: 768px){
+  .nav-links {
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+  }
+
+}
