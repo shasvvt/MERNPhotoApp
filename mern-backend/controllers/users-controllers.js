@@ -1,7 +1,7 @@
-const { v4: uuid } = require('uuid');
-const { validationResult } = require('express-validator');
+const { v4: uuid } = require("uuid");
+const { validationResult } = require("express-validator");
 
-const HttpError = require('../models/http-error');
+const HttpError = require("../models/http-error");
 
 let DUMMY_USERS = [
   {
@@ -13,14 +13,14 @@ let DUMMY_USERS = [
     email: "terry.medhurst@email.com",
     dob: new Date(),
     username: "ninja725",
-    password: "password"
-  }
+    password: "password",
+  },
 ];
 
 const getUsers = (req, res, next) => {
   const users = DUMMY_USERS;
   res.json(users);
-}
+};
 
 const createUser = (req, res, next) => {
   const errors = validationResult(req);
@@ -29,10 +29,15 @@ const createUser = (req, res, next) => {
   }
   const { fullName, email, dob, username, password } = req.body;
 
-  const hasUser = DUMMY_USERS.find(u => u.email === email || u.username === username)
+  const hasUser = DUMMY_USERS.find(
+    (u) => u.email === email || u.username === username
+  );
 
   if (hasUser) {
-    throw new HttpError("Cannot create user. Email/Username already exist.", 422)
+    throw new HttpError(
+      "Could not create user, Email/Username already exist",
+      422
+    );
   }
 
   const createdUser = {
@@ -41,7 +46,7 @@ const createUser = (req, res, next) => {
     email,
     dob,
     username,
-    password
+    password,
   };
 
   DUMMY_USERS.push(createdUser);
@@ -50,7 +55,7 @@ const createUser = (req, res, next) => {
 
 const loginUser = (req, res, next) => {
   const errors = validationResult(req);
-  if(!errors.isEmpty()){
+  if (!errors.isEmpty()) {
     throw new HttpError("Invalid inputs passed.", 422);
   }
   const { username, password } = req.body;
