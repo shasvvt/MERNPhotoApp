@@ -11,8 +11,7 @@ router.get('/', userController.getUsers);
 router.post(
     '/signup',
     [
-        check('fullName.firstName').notEmpty(),
-        check('fullName.lastName').notEmpty(),
+        check('name').notEmpty(),
         check('email').normalizeEmail().isEmail(),
         body('dob').notEmpty().custom((value) => {
             const birthDate = new Date(value);
