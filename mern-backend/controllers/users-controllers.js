@@ -19,7 +19,7 @@ const createUser = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).json(errors);
   }
-  const { name, email, dob, username, password } = req.body;
+  const { name, email, username, password } = req.body;
 
   let existingUser;
 
@@ -40,7 +40,6 @@ const createUser = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    dob,
     username,
     password,
     places : [],

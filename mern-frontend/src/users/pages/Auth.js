@@ -29,32 +29,58 @@ const Auth = () => {
     false
   );
 
-  const authSubmitHandler = (ev) => {
+  const authSubmitHandler = async (ev) => {
     ev.preventDefault();
+    if (isLoginMode) {
+    } else {
+      try {
+        const response = await fetch("http://localhost:5001/api/users/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formState.inputs.name.value,
+            username: formState.inputs.username.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value
+          }),
+        });
+
+        const responseDate = await response.json();
+        console.log(responseDate);
+      } catch (err) {
+        console.log(err);
+      }
+    }
     authContext.login();
   };
 
   const switchModeHandler = () => {
-    if(!isLoginMode){
+    if (!isLoginMode) {
       setFormData(
         {
           ...formState.inputs,
-          username: undefined
+          username: undefined,
+          name: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
-      )
-    }
-    else {
+      );
+    } else {
       setFormData(
         {
           ...formState.inputs,
           username: {
-            value:'',
-            isValid: false
+            value: "",
+            isValid: false,
+          },
+          name: {
+            value: "",
+            isValid: false,
           }
         },
         false
-      )
+      );
     }
     setIsLoginMode((prevMode) => !prevMode);
   };
@@ -62,17 +88,28 @@ const Auth = () => {
   return (
     <Card className="authentication">
       <form onSubmit={authSubmitHandler}>
-        {!isLoginMode && 
-        <Input
-          id="username"
-          type="text"
-          label="Username"
-          element="input"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter username"
-          onInput={inputChangeHandler}
-        />
-        }
+        {!isLoginMode && (
+          <div>
+            <Input
+              id="name"
+              type="text"
+              label="Name"
+              element="input"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter name"
+              onInput={inputChangeHandler}
+            />
+            <Input
+              id="username"
+              type="text"
+              label="Username"
+              element="input"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter username"
+              onInput={inputChangeHandler}
+            />
+          </div>
+        )}
         <Input
           id="email"
           type="text"

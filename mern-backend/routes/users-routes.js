@@ -13,15 +13,6 @@ router.post(
     [
         check('name').notEmpty(),
         check('email').normalizeEmail().isEmail(),
-        body('dob').notEmpty().custom((value) => {
-            const birthDate = new Date(value);
-            const currentDate = new Date();
-            const age = currentDate.getFullYear() - birthDate.getFullYear();
-            if(age < 18){
-                throw new HttpError("Age must be at least 18 years.", 422);
-            }
-            return true;
-        }),
         check('password').notEmpty(),
         check('username').notEmpty()
     ],
