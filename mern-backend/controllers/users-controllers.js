@@ -62,7 +62,7 @@ const loginUser = async (req, res, next) => {
     return next(new HttpError("Invalid inputs passed.", 422));
   }
   const { username, password } = req.body;
-
+  console.log(req.body)
   let user;
   try {
     user = await User.findOne({
@@ -71,7 +71,6 @@ const loginUser = async (req, res, next) => {
   } catch (err) {
     return next(new HttpError("Cannot log in. Please try again later", 500));
   }
-
   if (!user) {
     return next(
       new HttpError("User does not exist. Please sign up instead", 403)
@@ -79,7 +78,7 @@ const loginUser = async (req, res, next) => {
   }
 
   if (user.password === password) {
-    res.status(200).json({ message: `user ${username} logged in` });
+    res.status(200).json({ message: `user ${username} logged in`, user: user.toObject({getters: true})});
   } else {
     return next(new HttpError('Invalid credentials', 401))
   }
