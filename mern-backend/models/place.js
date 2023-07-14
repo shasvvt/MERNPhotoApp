@@ -13,6 +13,7 @@ const placeSchema = new Schema({
   },
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   likes: { type: Number, default: 0},
+  likedBy: [{type: mongoose.Types.ObjectId, ref: "User"}],
   comments: [
     {
       text: { type: String },

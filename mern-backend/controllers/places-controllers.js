@@ -245,11 +245,42 @@ const deleteComment = async (req, res, next) => {
   res.json({message: 'Comment deleted!'});
 };
 
+const createLike = async (req, res, next) => {
+  const placeId = req.params.pid;
+  const userId = req.body.creator;;
+
+  let place;
+  try {
+    place = await Place.findById(placeId);
+
+    if(!place){
+      return next (new HttpError('Could not find place for provided id.', 404));
+    }
+
+    if(place.likedBy.includes(userId)){
+      console.log('here')
+      return res.status(204).json('User has already liked the place.');
+    }
+
+    place.likes += 1;
+    place.likedBy.push(userId);
+
+    await place.save();
+  } catch (error) {
+    return next(new HttpError('Something went wrong.', 500));
+  }
+
+  res.json({message: `Place liked by ${userId}`})
+}
+
 exports.getPlaceById = getPlaceById;
 exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
 exports.updatePlace = updatePlace;
 exports.deletePlace = deletePlace;
+
 exports.createComment = createComment;
 exports.getComments = getComments;
 exports.deleteComment = deleteComment;
+
+exports.createLike = createLike;

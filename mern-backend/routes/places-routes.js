@@ -28,9 +28,11 @@ router.patch(
 
 router.delete('/:pid', placesControllers.deletePlace);
 
+router.patch('/:pid/like', placesControllers.createLike);
+
 router.get('/:pid/comments', placesControllers.getComments);
 
-router.post('/:pid/comments', placesControllers.createComment);
+router.patch('/:pid/comments', placesControllers.createComment);
 
 router.delete('/:pid/comments/:commentid', placesControllers.deleteComment);
 
