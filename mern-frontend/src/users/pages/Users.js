@@ -11,15 +11,11 @@ const Users = () => {
 
   useEffect(() => {
     fetchUsersData();
-  }, []);
+  }, [sendRequest]);
 
   const fetchUsersData = async () => {
     try {
       const userData = await sendRequest("http://localhost:5001/api/users");
-      // const responseData = await response.json();
-      // if (!response.ok) {
-      //   throw new Error(response.message);
-      // }
       setUserData(userData.users);
     } catch (err) {
 

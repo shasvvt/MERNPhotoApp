@@ -32,6 +32,6 @@ router.get('/:pid/comments', placesControllers.getComments);
 
 router.post('/:pid/comments', placesControllers.createComment);
 
-//router.delete('/:pid/comments', placesControllers.deleteComment);
+router.delete('/:pid/comments/:commentid', placesControllers.deleteComment);
 
 module.exports = router;

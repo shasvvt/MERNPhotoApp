@@ -12,13 +12,14 @@ const placeSchema = new Schema({
     lon: { type: Number, required: true },
   },
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-  likes: { type: Number },
+  likes: { type: Number, default: 0},
   comments: [
     {
       text: { type: String },
       creator: { type: mongoose.Types.ObjectId, ref: "User" },
       likes: { type: Number },
-      created: {type: Date}
+      created: {type: Date},
+      // _postId: Schema.Types.ObjectId
     },
   ],
 });

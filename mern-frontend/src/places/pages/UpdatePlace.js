@@ -7,7 +7,10 @@ import {
   VALIDATOR_REQUIRE,
 } from "../../shared/utils/validators";
 import { useForm } from "../../shared/hooks/form-hook";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import Card from "../../shared/components/UIComponents/Card";
+import LoadingSpinner from "../../shared/components/UIComponents/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIComponents/ErrorModal";
 
 const DUMMY_PLACES = [
   {
@@ -41,7 +44,10 @@ const DUMMY_PLACES = [
 const UpdatePlace = () => {
   const placeId = useParams().placeId;
 
-  const [loading, setLoading] = useState(false);
+  const {isLoading, error, sendRequest, clearError} = useHttpClient();
+
+  const [loadedPlace, setLoadedPlace] = useState();
+
 
 const [formState, inputChangeHandler, setFormData] = useForm(
   {
@@ -57,33 +63,46 @@ const [formState, inputChangeHandler, setFormData] = useForm(
   false
 );
 
-const identifiedPlace = DUMMY_PLACES.find((p) => p.id == placeId);
-
-useEffect(() => {
-  if(identifiedPlace){
+const fetchPlace = () => {
+  try{
+    const responseData = sendRequest(`http://localhost:5001/api/places/${placeId}`);
+    console.log(responseData.place)
+    setLoadedPlace(responseData.place);
     setFormData(
       {
         title: {
-          value: identifiedPlace.title,
+          value: responseData.place.title,
           isValid: true,
         },
         description: {
-          value: identifiedPlace.description,
+          value: responseData.place.description,
           isValid: true,
         },
       },
       true
     );
-  } 
-  setLoading(true);
-}, [setFormData, identifiedPlace]);
+  }
+  catch (err) {
+    console.log(err.message)
+  }
+}
+
+useEffect(() => {
+  fetchPlace()
+}, [sendRequest, placeId])
+
 
 const placeUpdateHandler = (ev) => {
   ev.preventDefault();
   console.log(formState.inputs)
 }
 
-  if (!identifiedPlace) {
+if(isLoading) {
+  return (<LoadingSpinner asOverlay />
+  )
+}
+
+  if (!loadedPlace && !error) {
     return (
       <div className="center">
         <Card>
@@ -93,16 +112,13 @@ const placeUpdateHandler = (ev) => {
     );
   }
 
-  if(!loading) {
-    return (
-      <div className="center">
-        <h2>Loading...</h2>
-      </div>
-    )
-  }
+
     // 
     return (
-      <form className="place-form">
+      <React.Fragment>
+        <ErrorModal error = {error} onClear={clearError} />
+        {loadedPlace &&
+        <form className="place-form">
         <Input
           id="title"
           type="text"
@@ -127,7 +143,9 @@ const placeUpdateHandler = (ev) => {
         <Button type="submit" disabled={!formState.isValid} onClick={placeUpdateHandler}>
           UPDATE PLACE
         </Button>
-      </form>
+      </form>}
+      </React.Fragment>
+      
     );
   
   // return <div>UpdatePlace</div>;

@@ -1,5 +1,5 @@
 const { v4: uuid } = require("uuid");
-const { validationResult } = require("express-validator");
+const { validationResult, param } = require("express-validator");
 const mongoosee = require('mongoose');
 
 const HttpError = require("../models/http-error");
@@ -7,6 +7,8 @@ const Place = require("../models/place");
 const User = require('../models/user');
 const getCoordinates = require("../util/location");
 const { default: mongoose } = require("mongoose");
+
+
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
@@ -180,7 +182,7 @@ const getComments = async (req, res, next) => {
     );
     return next(error);
   }
-  res.json({ comments: place.comments})
+  res.json({ comments: place.comments.map(comment => comment.toObject({getters: true}))})
 };
 
 const createComment = async (req, res, next) => {
@@ -195,6 +197,7 @@ const createComment = async (req, res, next) => {
     text,
     creator,
     created: new Date(),
+    // _postId: new mongoose.Types.ObjectId
   }
   
   let place;
@@ -210,7 +213,37 @@ const createComment = async (req, res, next) => {
   res.status(200).json({comment: comment});
 }
 
+const deleteComment = async (req, res, next) => {
+  const placeId = req.params.pid;
+  const commentId = req.params.commentid;
 
+  let place;
+  let commentIndex;
+  try {
+    place = await Place.findById(placeId);
+
+    if(!place) {
+      return next(new HttpError('Cannot find place for provided id.', 404));
+    }
+
+    commentIndex = place.comments.findIndex(
+      comment => comment._id.toString() === commentId
+    );
+
+    if (commentIndex === -1) {
+      return next( new HttpError('Cannot find comment for provide id.', 404))
+    }
+
+    place.comments.splice(commentIndex, 1);
+
+    await place.save();
+
+  } catch (error) {
+    return next(new HttpError('Server Error', 500))
+  }
+
+  res.json({message: 'Comment deleted!'});
+};
 
 exports.getPlaceById = getPlaceById;
 exports.getPlacesByUserId = getPlacesByUserId;
@@ -219,3 +252,4 @@ exports.updatePlace = updatePlace;
 exports.deletePlace = deletePlace;
 exports.createComment = createComment;
 exports.getComments = getComments;
+exports.deleteComment = deleteComment;

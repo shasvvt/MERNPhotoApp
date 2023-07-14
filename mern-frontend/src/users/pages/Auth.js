@@ -39,7 +39,7 @@ const Auth = () => {
     ev.preventDefault();
     if (isLoginMode) {
       try{
-        await sendRequest(
+        const responseData = await sendRequest(
           'http://localhost:5001/api/users/login', 
           'POST',
           JSON.stringify({
@@ -49,15 +49,15 @@ const Auth = () => {
           {
             "Content-Type": "application/json",
           }
-          )
-        authContext.login()
+          );
+        authContext.login(responseData.user.id)
       }
       catch (err) {
 
       }
     } else {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5001/api/users/signup",
           "POST",
           JSON.stringify({
@@ -70,7 +70,7 @@ const Auth = () => {
             "Content-Type": "application/json",
           }
         );
-        authContext.login();
+        authContext.login(responseData.user.id);
       } catch (err) {
 
       }
