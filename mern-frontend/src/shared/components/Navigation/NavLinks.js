@@ -25,7 +25,7 @@ const NavLinks = (props) => {
       </li>
       {authContext.isLoggedIn && (
         <li>
-          <NavLink to="/1/places" exact>
+          <NavLink to={`/${authContext.userId}/places`} exact>
             <ShareLocationIcon className="svg_icons" color="success" />
           </NavLink>
         </li>

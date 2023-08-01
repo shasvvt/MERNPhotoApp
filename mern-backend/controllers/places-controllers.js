@@ -120,7 +120,6 @@ const createPlace = async (req, res, next) => {
 
 const updatePlace = async (req, res, next) => {
   const errors = validationResult(req);
-  console.log(errors);
   if (!errors.isEmpty()) {
     return next(new HttpError("Invalid Fields", 422));
   }
@@ -258,19 +257,21 @@ const createLike = async (req, res, next) => {
     }
 
     if(place.likedBy.includes(userId)){
-      console.log('here')
-      return res.status(204).json('User has already liked the place.');
+      return res.status(204).send();
+      // return res.status(204).json({message: 'done'});
     }
 
     place.likes += 1;
     place.likedBy.push(userId);
 
     await place.save();
+
+  res.json({message: `Place liked by ${userId}`})
+
   } catch (error) {
     return next(new HttpError('Something went wrong.', 500));
   }
 
-  res.json({message: `Place liked by ${userId}`})
 }
 
 exports.getPlaceById = getPlaceById;

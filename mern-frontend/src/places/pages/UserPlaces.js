@@ -22,15 +22,60 @@ export const UserPlaces = (props) => {
     } catch (err) {}
   };
 
+  const deletePlace = async (placeId) => {
+    try {
+      await sendRequest(
+        `http://localhost:5001/api/places/${placeId}`,
+        "DELETE"
+      );
+      console.log("Place deleted successfully.");
+    } catch (error) {}
+
+    setLoadedPlaces((prevPlaces) => prevPlaces.filter(place => place.id !==placeId));
+  };
+
   useEffect(() => {
     getPlaces();
-  }, [sendRequest, userId])
+  }, [sendRequest, userId]);
+
+  const likePlace = async(placeId) => {
+    try {
+      await sendRequest(
+        `http://localhost:5001/api/places/${placeId}/like`,
+        "PATCH",
+        JSON.stringify({
+          creator: userId
+        }),
+        {"Content-Type": "application/json"}
+      )
+    } catch (error) {
+      
+    }
+  }
+
+  const commentPlace = async (text, placeId) => {
+    try {
+      await sendRequest(
+        `http://localhost:5001/api/places/${placeId}/comments`,
+        'PATCH',
+        JSON.stringify({
+          text: text,
+          creator: userId
+        }),
+        {"Content-Type": "application/json"}
+      )
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <div>
-    <ErrorModal error = {error} onClear = {clearError} />
-    {isLoading && <LoadingSpinner asOverlay />}
-    {loadedPlaces && <PlaceList items={loadedPlaces} />}
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && <LoadingSpinner asOverlay />}
+      {loadedPlaces && (
+        <PlaceList items={loadedPlaces} onDelete={deletePlace} onLike={likePlace} onComment={commentPlace}/>
+      )}
     </div>
-  )
+  );
 };

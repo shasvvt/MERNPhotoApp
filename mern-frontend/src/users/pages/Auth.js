@@ -3,6 +3,7 @@ import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import ErrorModal from "../../shared/components/UIComponents/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIComponents/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MIN,
@@ -37,6 +38,7 @@ const Auth = () => {
 
   const authSubmitHandler = async (ev) => {
     ev.preventDefault();
+    console.log(formState.inputs);
     if (isLoginMode) {
       try{
         const responseData = await sendRequest(
@@ -57,18 +59,16 @@ const Auth = () => {
       }
     } else {
       try {
+        const formData = new FormData();
+        formData.append('email', formState.inputs.email.value);
+        formData.append('name', formState.inputs.name.value);
+        formData.append('username', formState.inputs.username.value);
+        formData.append('password', formState.inputs.password.value);
+        formData.append('image', formState.inputs.image.value);
         const responseData = await sendRequest(
           "http://localhost:5001/api/users/signup",
           "POST",
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            username: formState.inputs.username.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            "Content-Type": "application/json",
-          }
+          formData
         );
         authContext.login(responseData.user.id);
       } catch (err) {
@@ -84,6 +84,7 @@ const Auth = () => {
           ...formState.inputs,
           username: undefined,
           name: undefined,
+          image: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -99,6 +100,10 @@ const Auth = () => {
             value: "",
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false
+          }
         },
         false
       );
@@ -107,7 +112,7 @@ const Auth = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay />}
         <form onSubmit={authSubmitHandler}>
@@ -122,6 +127,7 @@ const Auth = () => {
                 errorText="Please enter name"
                 onInput={inputChangeHandler}
               />
+              <ImageUpload center id='image' onInput={inputChangeHandler}/>
               <Input
                 id="username"
                 type="text"
@@ -160,7 +166,7 @@ const Auth = () => {
         </Button>
       </Card>
       <ErrorModal error={error} onClear={clearError} />
-    </div>
+    </React.Fragment>
   );
 };
 

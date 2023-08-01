@@ -1,15 +1,21 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Card from "../../shared/components/UIComponents/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIComponents/Modal";
 import Map from "../../shared/components/UIComponents/Map";
 import "./PlaceItem.css";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import InteractionModal from "../../shared/components/UIComponents/InteractionModal";
 
 const PlaceItem = (props) => {
   const authContext = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
 
   const showDeleteWanrningHandler = () => {
     setShowConfirmModal(true);
@@ -19,9 +25,19 @@ const PlaceItem = (props) => {
     setShowConfirmModal(false);
   };
 
-  const confirmDeleteHandler = () => {
+  const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
+    props.onDelete(props.id);
   };
+
+  const onLike = async() => {
+    props.onLike(props.id);
+  }
+
+  const onComment = async(comment) => {
+    console.log(comment);
+    props.onComment(comment, props.id);
+  }
 
   return (
     <>
@@ -55,6 +71,7 @@ const PlaceItem = (props) => {
         <p>Do you want to proceed deleting this place permanently?</p>
       </Modal>
       <li className="place-item">
+        <InteractionModal onLike = {onLike} onComment={onComment}>
         <Card className="place-item__content">
           <div className="place-item__image">
             <img src={props.image} alt={props.title} />
@@ -78,6 +95,7 @@ const PlaceItem = (props) => {
             )}
           </div>
         </Card>
+        </InteractionModal>
       </li>
     </>
   );

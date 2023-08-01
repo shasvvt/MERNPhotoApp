@@ -15,6 +15,7 @@ const getUsers = async (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
+  console.log('here')
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json(errors);
