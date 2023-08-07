@@ -1,0 +1,18 @@
+.user-item__container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 400px;
+    border-radius: 5px;
+    margin: 5px;
+    background-color: #e4dcf5;
+}
+
+.user-item__image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 5px;
+    background-color: #ffba9ae0;
+    display: inline-block;
+}

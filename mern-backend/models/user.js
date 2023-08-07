@@ -10,7 +10,7 @@ const userSchema = new Schema(
         username: {type: String, required: true, unique: true},
         password: {type: String, required: true},
         places: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Place' }],
-
+        image: {type:String, required: true}
     }
 );
 

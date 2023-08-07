@@ -20,7 +20,7 @@ const createUser = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).json(errors);
   }
-  const { name, email, username, password } = req.body;
+  const { name, email, username, password, image } = req.body;
 
   let existingUser;
 
@@ -44,6 +44,7 @@ const createUser = async (req, res, next) => {
     username,
     password,
     places : [],
+    image : req.file.path
   });
 
   let result;

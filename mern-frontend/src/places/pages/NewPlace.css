@@ -1,10 +1,48 @@
 .place-form {
-    list-style: none;
-    margin: 10px auto;
-    padding: 1rem;
-    width: 90%;
-    max-width: 40rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.398);
+  list-style: none;
+  margin: 10px auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 40rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.398);
+}
+
+.image-upload {
+  display: block;
+  width: 90%;
+  position: relative;
+  background: rgb(137, 133, 138);
+  background: radial-gradient(circle, rgba(137, 133, 138) 0%, rgba(50, 64, 87, 1) 100%);
+  max-width: 40rem;
+  max-height: 30rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  opacity: 0.75;
+  margin: 10px auto;
+  padding: 10px;
+
+  .image-upload__form {
+    display: flex;
+    flex-flow: column nowrap;
+
+    .image-upload__preview {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .image-upload__preview img {
+      width: 80%;
+      height: 80%;
+      max-width: 40rem;
+      max-height: 30rem;
+      object-fit: contain;
+    }
+
+    .image-upload__preview p {
+      display: none;
+    }
   }
+}

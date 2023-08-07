@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path")
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -10,14 +13,20 @@ const app = express();
 
 app.use(bodyParser.json());
 
+//middleware for image links
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+
 //Add headers to response so that when subsequest responses have headers attached
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*',);
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Methods',  'GET, POST, PATCH, DELETE');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
 
   next();
-})
+});
 
 app.use("/api/places", placesRoutes);
 
@@ -28,7 +37,13 @@ app.use((req, res, next) => {
   throw error;
 });
 
+//general error handling middleware
 app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
   if (res.headerSent) {
     return next(error);
   }
@@ -37,9 +52,11 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect('mongodb+srv://shasvvt:WNjwacEdGx6CXAMT@cluster0.tyxk0m3.mongodb.net/mern?retryWrites=true&w=majority')
+  .connect(
+    "mongodb+srv://shasvvt:WNjwacEdGx6CXAMT@cluster0.tyxk0m3.mongodb.net/mern?retryWrites=true&w=majority"
+  )
   .then(() => {
-    console.log('DB connection success!')
+    console.log("DB connection success!");
     app.listen(5001);
   })
   .catch((err) => {
