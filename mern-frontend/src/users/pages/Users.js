@@ -15,7 +15,7 @@ const Users = () => {
 
   const fetchUsersData = async () => {
     try {
-      const userData = await sendRequest("http://localhost:5001/api/users");
+      const userData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users`);
       setUserData(userData.users);
     } catch (err) {
 

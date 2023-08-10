@@ -22,7 +22,7 @@ const UserItem = (props) => {
             className="user-item__image"
           >
             <img
-              src={`http://localhost:5001/${props.image}`}
+              src={`${process.env.REACT_APP_ASSET_URL}/${props.image}`}
               alt={props.name}
               // style={{
               //   width: "100px",

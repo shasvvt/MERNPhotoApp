@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -14,9 +14,11 @@ import {
 
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 
 
 const UpdatePlace = () => {
+  const auth = useContext(AuthContext)
   const placeId = useParams().placeId;
   const [loadedPlace, setLoadedPlace] = useState();
   const history = useHistory();
@@ -40,7 +42,7 @@ const UpdatePlace = () => {
   const fetchPlace = async () => {
     try {
       const responseData = await sendRequest(
-        `http://localhost:5001/api/places/${placeId}`
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}`
       );
       console.log(responseData.place);
       setLoadedPlace(responseData.place);
@@ -70,13 +72,14 @@ const UpdatePlace = () => {
     ev.preventDefault();
     try {
       await sendRequest(
-        `http://localhost:5001/api/places/${placeId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}`,
         "PATCH",
         JSON.stringify({
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
         }),
-        { "Content-Type": "application/json" }
+        { "Content-Type": "application/json",
+          "Authorization":  'Bearer ' +auth.token}
       );
     } catch (error) {
 

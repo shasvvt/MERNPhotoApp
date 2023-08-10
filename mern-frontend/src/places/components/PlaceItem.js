@@ -74,7 +74,7 @@ const PlaceItem = (props) => {
         <InteractionModal onLike = {onLike} onComment={onComment}>
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={`http://localhost:5001/${props.image}`} alt={props.title} />
+            <img src={`${process.env.REACT_APP_ASSET_URL}/${props.image}`} alt={props.title} />
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>
@@ -85,10 +85,10 @@ const PlaceItem = (props) => {
             <Button inverse onClick={() => setShowMap(true)}>
               View on Map
             </Button>
-            {authContext.isLoggedIn && (
+            {(authContext.userId === props.creatorId) && (
               <Button to={`/places/${props.id}`}>Edit</Button>
             )}
-            {authContext.isLoggedIn && (
+            {(authContext.userId === props.creatorId) && (
               <Button danger onClick={showDeleteWanrningHandler}>
                 Delete
               </Button>

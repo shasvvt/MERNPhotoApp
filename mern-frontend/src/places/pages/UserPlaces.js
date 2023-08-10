@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PlaceList from "../components/PlaceList";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIComponents/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIComponents/LoadingSpinner";
+import { AuthContext } from "../../shared/context/auth-context";
 
-export const UserPlaces = (props) => {
+const UserPlaces = (props) => {
   const userId = useParams().userId;
+  const auth = useContext(AuthContext);
 
   const [loadedPlaces, setLoadedPlaces] = useState();
 
@@ -16,7 +18,7 @@ export const UserPlaces = (props) => {
   const getPlaces = async () => {
     try {
       const responseData = await sendRequest(
-        `http://localhost:5001/api/places/user/${userId}`
+        `${process.env.REACT_APP_BACKEND_URL}/places/user/${userId}`
       );
       setLoadedPlaces(responseData.places);
     } catch (err) {}
@@ -25,8 +27,12 @@ export const UserPlaces = (props) => {
   const deletePlace = async (placeId) => {
     try {
       await sendRequest(
-        `http://localhost:5001/api/places/${placeId}`,
-        "DELETE"
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}`,
+        "DELETE",
+        null,
+        {
+          Authorization: 'Bearer ' + auth.token
+        }
       );
       console.log("Place deleted successfully.");
     } catch (error) {}
@@ -41,7 +47,7 @@ export const UserPlaces = (props) => {
   const likePlace = async(placeId) => {
     try {
       await sendRequest(
-        `http://localhost:5001/api/places/${placeId}/like`,
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}/like`,
         "PATCH",
         JSON.stringify({
           creator: userId
@@ -56,7 +62,7 @@ export const UserPlaces = (props) => {
   const commentPlace = async (text, placeId) => {
     try {
       await sendRequest(
-        `http://localhost:5001/api/places/${placeId}/comments`,
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}/comments`,
         'PATCH',
         JSON.stringify({
           text: text,
@@ -79,3 +85,5 @@ export const UserPlaces = (props) => {
     </div>
   );
 };
+
+export default UserPlaces;
