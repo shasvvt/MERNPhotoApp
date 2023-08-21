@@ -53,8 +53,9 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tyxk0m3.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
-  )
+    //`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tyxk0m3.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+    `mongodb://mernapp-mongo:MoStncrnqdZ7FLFgfHy4R8XXFaJS3a5Ri3edWOL6bikUaoE2h20C8JVnUpsHvqOVgBk2IdjJgDhyACDbcV7OjQ==@mernapp-mongo.mongo.cosmos.azure.com:10255/${process.env.DB_NAME}?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@mernapp-mongo@`
+    )
   .then(() => {
     console.log("DB connection success!");
     app.listen(5001);

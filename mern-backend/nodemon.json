@@ -2,7 +2,8 @@
     "env": {
         "DB_USER": "shasvvt",
         "DB_PASSWORD": "WNjwacEdGx6CXAMT",
-        "DB_NAME": "mern",
+        "DB_NAME_TEST": "mern",
+        "DB_NAME": "mernapp",
         "JWT_KEY": "secret_do_not_share"
     }
 }
